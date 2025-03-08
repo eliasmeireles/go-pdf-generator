@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  web-provider-app:
+    image: nginx:latest
+    container_name: web-provider-app
+    ports:
+      - "3000:80"
+    volumes:
+      - ./statics:/usr/share/nginx/html:ro  # Corrected path for Nginx
+    restart: always
+
+  pdf-generator-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pdf-generator-app
+    ports:
+      - "8080:80"
+      - "9223:9223"
+    depends_on:
+      - web-provider-app
+    restart: always
+
+volumes:
+  web-provider-data:
+    driver: local
