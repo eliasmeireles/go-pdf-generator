@@ -24,8 +24,6 @@ func printPdf(pdfBuffer *[]byte, url string, ids []string) chromedp.Tasks {
 	tasks := chromedp.Tasks{
 		// Use the data: URL scheme to load the HTML content directly
 		chromedp.Navigate(url),
-		// Wait for the page to fully load
-		chromedp.WaitReady("body"), // Ensure the body is fully rendered
 	}
 
 	// Add visibility checks for each ID in the ids slice
@@ -47,13 +45,13 @@ func printPdf(pdfBuffer *[]byte, url string, ids []string) chromedp.Tasks {
 			// Configure PDF options
 			*pdfBuffer, _, err = page.PrintToPDF().
 				WithPrintBackground(true). // Include background colors/images
-				WithPaperWidth(8.5). // Set paper width (in inches)
-				WithPaperHeight(11). // Set paper height (in inches)
-				WithMarginTop(0.5). // Set top margin (in inches)
-				WithMarginBottom(0.5). // Set bottom margin (in inches)
-				WithMarginLeft(0.5). // Set left margin (in inches)
-				WithMarginRight(0.5). // Set right margin (in inches)
-				WithScale(1.0). // Set scale (1.0 = 100%)
+				WithPaperWidth(8.5).
+				WithPaperHeight(11).
+				WithMarginTop(0.5).
+				WithMarginBottom(0.5).
+				WithMarginLeft(0.5).
+				WithMarginRight(0.5).
+				WithScale(1.0).
 				Do(ctx)
 			return err
 		}),
