@@ -16,7 +16,7 @@ mkdir -p "$OUTPUT_DIR"
 # Function to run a single curl command
 run_curl() {
     local index=$1
-    curl -o "$OUTPUT_DIR/output_$index.pdf" "$URL&fileName=output_$index"
+    curl -o "$OUTPUT_DIR/output_$index.pdf" "$URL&fileName=output_$index&appendText=output_$index"
     echo "Request $index completed."
 }
 

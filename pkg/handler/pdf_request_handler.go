@@ -10,9 +10,10 @@ func PDFRequestHandler(ctx *api_context.ApiRequestContext[*api_context.DefaultCo
 	url := ctx.QueryOf("url")
 	expectedIds := ctx.QueriesOf("id")
 	expectedClasses := ctx.QueriesOf("class")
+	appendText := ctx.QueryOf("appendText")
 
 	if url != "" {
-		generatedPDF, err := pdf.GetPDFFromURL(url, expectedIds, expectedClasses)
+		generatedPDF, err := pdf.GetPDFFromURL(url, expectedIds, expectedClasses, appendText)
 		if err != nil {
 			ctx.InternalServerError("Failed to generate the pdf: " + err.Error())
 		}

@@ -8,22 +8,40 @@ import (
 	"time"
 )
 
-func GetPDFFromURL(templateUrl string, ids []string, classes []string) ([]byte, error) {
+func GetPDFFromURL(templateUrl string, ids []string, classes []string, additionalText string) ([]byte, error) {
 	ctx, cancel := chromedp.NewContext(context.Background())
 	defer cancel()
 
 	var pdfBuffer []byte
-	err := chromedp.Run(ctx, printPdf(&pdfBuffer, templateUrl, ids, classes))
+	err := chromedp.Run(ctx, printPdf(&pdfBuffer, templateUrl, ids, classes, additionalText))
 	if err != nil {
 		return nil, err
 	}
 
 	return pdfBuffer, nil
 }
-func printPdf(pdfBuffer *[]byte, url string, ids []string, classes []string) chromedp.Tasks {
+
+func printPdf(pdfBuffer *[]byte, url string, ids []string, classes []string, additionalText string) chromedp.Tasks {
 	tasks := chromedp.Tasks{
-		// Use the data: URL scheme to load the HTML content directly
 		chromedp.Navigate(url),
+	}
+
+	// Inject additional text into the DOM
+	if additionalText != "" {
+		tasks = append(tasks, chromedp.Tasks{
+			chromedp.Evaluate(fmt.Sprintf(`
+			var div = document.createElement('div');
+			div.style.position = 'fixed';
+			div.style.bottom = '10px';
+			div.style.right = '10px';
+			div.style.backgroundColor = 'white';
+			div.style.border = '1px solid black';
+			div.style.padding = '5px';
+			div.style.zIndex = '1000';
+			div.textContent = '%s';
+			document.body.appendChild(div);
+		`, additionalText), nil),
+		}...)
 	}
 
 	// Add visibility checks for each class in the classes slice
@@ -48,13 +66,11 @@ func printPdf(pdfBuffer *[]byte, url string, ids []string, classes []string) chr
 
 	// Add the PDF generation task
 	tasks = append(tasks, chromedp.Tasks{
-		// Optional: Add a delay to ensure everything is fully rendered
 		chromedp.Sleep(2 * time.Second), // Adjust the duration as needed
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			var err error
-			// Configure PDF options
 			*pdfBuffer, _, err = page.PrintToPDF().
-				WithPrintBackground(true). // Include background colors/images
+				WithPrintBackground(true).
 				WithPaperWidth(8.5).
 				WithPaperHeight(11).
 				WithMarginTop(0.5).

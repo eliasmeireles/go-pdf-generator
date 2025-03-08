@@ -3,7 +3,7 @@ DOCKER_COMPOSE_FILE=docker-compose.yaml
 SERVICE_NAME=pdf-generator-app
 TEST_SCRIPT=run_parallel_curl
 NUM_REQUESTS=100
-MAX_CONCURRENT=20
+MAX_CONCURRENT=50
 
 # Default target
 all: build run
