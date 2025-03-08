@@ -21,6 +21,7 @@ HTML and convert it to a PDF.
 - `id` (optional): A list of element IDs to wait for before generating the PDF. The service ensures these elements are
   visible before proceeding.
 - `fileName` (optional): The desired name of the generated PDF file. If not provided, an uuid will be used.
+- `appendText` (optional): Append the provided text to the PDF. Nice to test with parallel execution.
 
 **Response**:
 
