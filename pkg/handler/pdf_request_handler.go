@@ -1,35 +1,31 @@
 package handler
 
 import (
-	"bytes"
-	"fmt"
 	"github.com/google/uuid"
 	"github.com/softwareplace/http-utils/api_context"
 	"go-pdf-generator/pkg/pdf"
-	"io"
 )
 
 func PDFRequestHandler(ctx *api_context.ApiRequestContext[*api_context.DefaultContext]) {
-	url := ctx.QueryValues["url"][0]
-	expectedIds := ctx.QueryValues["id"]
+	url := ctx.QueryOf("url")
+	expectedIds := ctx.QueriesOf("id")
+	expectedClasses := ctx.QueriesOf("class")
 
 	if url != "" {
-		generatedPDF, err := pdf.GetPDFFromURL(url, expectedIds)
+		generatedPDF, err := pdf.GetPDFFromURL(url, expectedIds, expectedClasses)
 		if err != nil {
 			ctx.InternalServerError("Failed to generate the pdf: " + err.Error())
 		}
-		writer := *ctx.Writer
 
-		writer.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s.pdf", uuid.NewString()))
-		writer.Header().Set("Content-Type", "application/octet-stream")
+		fileName := ctx.QueryOfOrElse("fileName", uuid.NewString())
 
-		_, err = io.Copy(writer, bytes.NewReader(generatedPDF))
+		err = ctx.WriteFile(generatedPDF, fileName)
+
 		if err != nil {
 			ctx.InternalServerError("Failed to stream file: " + err.Error())
+			return
 		}
-		return
 	}
 
 	ctx.BadRequest("Requires url query parameter")
-
 }

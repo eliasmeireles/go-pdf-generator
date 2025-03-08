@@ -8,7 +8,7 @@ require (
 	github.com/chromedp/cdproto v0.0.0-20250307225615-b9fffb6d31ad
 	github.com/chromedp/chromedp v0.13.1
 	github.com/google/uuid v1.6.0
-	github.com/softwareplace/http-utils v0.0.0-20250308192500-f87e886071c0
+	github.com/softwareplace/http-utils v0.0.0-20250308210241-614527c101f6
 )
 
 require (

@@ -1,9 +1,12 @@
-version: "3.8"
-
 services:
   web-provider-app:
     image: nginx:latest
     container_name: web-provider-app
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "68mb"
     ports:
       - "3000:80"
     volumes:
@@ -15,6 +18,11 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: pdf-generator-app
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "5012mb"
     ports:
       - "8080:80"
       - "9223:9223"

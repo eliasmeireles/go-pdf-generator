@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Number of parallel requests (default: 100)
+NUM_REQUESTS=${1:-100}
+
+# Maximum number of concurrent requests (default: 20)
+MAX_CONCURRENT=${2:-20}
+
+# URL and parameters for the curl command
+URL="http://localhost:8080/api/pdf-generator/v1/pdf?url=https://go.dev/doc/tutorial/getting-started&id=prerequisites&id=nav"
+
+# Output directory for PDFs
+OUTPUT_DIR=".out"
+mkdir -p "$OUTPUT_DIR"
+
+# Function to run a single curl command
+run_curl() {
+    local index=$1
+    curl -o "$OUTPUT_DIR/output_$index.pdf" "$URL&fileName=output_$index"
+    echo "Request $index completed."
+}
+
+# Run the curl commands with limited concurrency
+for ((i=1; i<=NUM_REQUESTS; i++)); do
+    run_curl "$i" &
+
+    # Limit the number of concurrent requests
+    if ((i % MAX_CONCURRENT == 0)); then
+        wait
+    fi
+done
+
+# Wait for all background processes to finish
+wait
+
+echo "All requests completed."
