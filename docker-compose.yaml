@@ -21,8 +21,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1"
-          memory: "5012mb"
+          cpus: "4"
+          memory: "2048MB"
     ports:
       - "8080:80"
       - "9223:9223"
