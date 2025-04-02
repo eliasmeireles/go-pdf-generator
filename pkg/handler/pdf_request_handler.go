@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/base64"
 	"github.com/eliasmeireles/go-pdf-generator/pkg/pdf"
 	"github.com/google/uuid"
 	goservectx "github.com/softwareplace/goserve/context"
@@ -8,9 +9,19 @@ import (
 
 func PDFRequestHandler(ctx *goservectx.Request[*goservectx.DefaultContext]) {
 	url := ctx.QueryOf("url")
+	isBase64 := ctx.QueryOf("base64")
 	expectedIds := ctx.QueriesOf("id")
 	expectedClasses := ctx.QueriesOf("class")
 	appendText := ctx.QueryOf("appendText")
+
+	if isBase64 == "true" {
+		decodedUrl, err := base64.StdEncoding.DecodeString(url)
+		if err != nil {
+			ctx.InternalServerError("Failed to decode base64: " + err.Error())
+			return
+		}
+		url = string(decodedUrl)
+	}
 
 	if url != "" {
 		generatedPDF, err := pdf.GetPDFFromURL(url, expectedIds, expectedClasses, appendText)
