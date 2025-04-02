@@ -1,12 +1,12 @@
 package handler
 
 import (
+	"github.com/eliasmeireles/go-pdf-generator/pkg/pdf"
 	"github.com/google/uuid"
-	"github.com/softwareplace/http-utils/api_context"
-	"go-pdf-generator/pkg/pdf"
+	goservectx "github.com/softwareplace/goserve/context"
 )
 
-func PDFRequestHandler(ctx *api_context.ApiRequestContext[*api_context.DefaultContext]) {
+func PDFRequestHandler(ctx *goservectx.Request[*goservectx.DefaultContext]) {
 	url := ctx.QueryOf("url")
 	expectedIds := ctx.QueriesOf("id")
 	expectedClasses := ctx.QueriesOf("class")

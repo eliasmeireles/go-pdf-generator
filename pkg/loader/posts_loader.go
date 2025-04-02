@@ -3,7 +3,7 @@ package loader
 import (
 	"bytes"
 	"fmt"
-	"go-pdf-generator/pkg/web"
+	"github.com/eliasmeireles/go-pdf-generator/pkg/web"
 	"html/template"
 	"io"
 	"log"

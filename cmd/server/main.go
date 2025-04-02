@@ -1,13 +1,18 @@
 package main
 
 import (
-	"github.com/softwareplace/http-utils/server"
-	"go-pdf-generator/pkg/handler"
+	"github.com/eliasmeireles/go-pdf-generator/pkg/handler"
+	"github.com/softwareplace/goserve/logger"
+	"github.com/softwareplace/goserve/server"
 )
+
+func init() {
+	logger.LogSetup()
+}
 
 func main() {
 	server.Default().
-		WithContextPath("/api/pdf-generator/v1/").
+		ContextPath("/api/pdf-generator/v1/").
 		Get(handler.PDFRequestHandler, "/pdf").
 		StartServer()
 }
