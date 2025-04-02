@@ -38,6 +38,13 @@ mkdir .out
 curl -o ./.out/output.pdf "http://localhost:8080/api/pdf-generator/v1/pdf?url=https://go.dev/doc"
 ```
 
+You can also pass the query param url as a base64 just provided a new query param `base64=true`
+
+```bash
+mkdir .out
+curl -o ./.out/output.pdf "http://localhost:8080/api/pdf-generator/v1/pdf?url=aHR0cHM6Ly9nby5kZXYvZG9j&base64=true"
+```
+
 To generate a PDF and wait for specific elements to be visible:
 
 ```bash
